@@ -145,6 +145,12 @@ drawparti2 <- function(grouping, testx, testgrouping, x, y, method = "lda", prec
   
   colorw <- testgrouping != khead
   err <- round(mean(colorw), 3)
+  c00 = sum(testgrouping==0 & khead == 0)
+  c01 = sum(testgrouping==0 & khead == 1)
+  c10 = sum(testgrouping==1 & khead == 0)
+  c11 = sum(testgrouping==1 & khead == 1)
+  balance.err <- round(0.5*((c00/(c00+c01)) + (c11/(c10+c11))),3)
+  
   color <- ifelse(colorw, col.wrong, col.correct)
   if(is.character(testgs) || is.factor(testgs)) testgs <- substr(testgs, 1, 1)
   
@@ -169,7 +175,7 @@ drawparti2 <- function(grouping, testx, testgrouping, x, y, method = "lda", prec
       legend(par("usr")[1], par("usr")[4], 
              legend = paste("Error:", err), bg = legend.bg, cex = print.err)
     else
-      mtext(paste("app. error rate:", err), 3, cex = print.err)
+      mtext(paste("app. balanced error rate:", 1-balance.err), 3, cex = print.err)    # use "app. error rate:", err instead of balance.err for Accuracy
   }
   
 }

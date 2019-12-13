@@ -42,5 +42,5 @@ myrf = function(data, testdata, threshold = 0.5, plot = TRUE, methodname = "KIHO
   # Confusion Matrix
   roc.test.result = ifelse(result.predicted.prob[,1] > threshold, 0, 1)
   if (log) {print(confusionMatrix(as.factor(roc.test.result), as.factor(test.y)))}
-  return(confusionMatrix(as.factor(roc.test.result), as.factor(test.y))$overall['Accuracy'])
+  return(confusionMatrix(as.factor(roc.test.result), as.factor(test.y))$byClass['Balanced Accuracy'])    # $overall['Accuracy']
 }

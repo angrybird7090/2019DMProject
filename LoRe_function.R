@@ -105,7 +105,7 @@ pcaLoRe = function(data, testdata, pc.n = 3, threshold = 0.5, plot = TRUE, metho
     roc.test.01result = ifelse(testX.prob > threshold, 1, 0)
     if (log){
       print(confusionMatrix(as.factor(roc.test.01result), as.factor(test.y))) }  #confusionMatrix
-    return(confusionMatrix(as.factor(roc.test.01result), as.factor(test.y))$overall['Accuracy'])
+    return(confusionMatrix(as.factor(roc.test.01result), as.factor(test.y))$byClass['Balanced Accuracy'])   # $overall['Accuracy']
   
   }else{   # if parameter pc.n is a vector
     
@@ -127,7 +127,7 @@ pcaLoRe = function(data, testdata, pc.n = 3, threshold = 0.5, plot = TRUE, metho
       roc.test1 <- roc(test.y, as.vector(testX))
       roc.test.01result = ifelse(testX.prob > threshold, 1, 0)
 
-      accuracy = c(accuracy, confusionMatrix(as.factor(roc.test.01result), as.factor(test.y))$overall['Accuracy'])
+      accuracy = c(accuracy, confusionMatrix(as.factor(roc.test.01result), as.factor(test.y))$byClass['Balanced Accuracy'])   # $overall['Accuracy']
     }
     
     plot(pc.n, accuracy, main = paste("Accuracy of pca-LR(", methodname,", Top", top, " genes)", sep ="" ), xlab = "Number of PCs used", ylab = "Accuracy", type = "b")

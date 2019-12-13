@@ -98,7 +98,7 @@ pcaldaqda(data = data11, testdata, axes = c(1,2), ldaqda = c(1,2,3), precisionld
 LoRe(data = data11, testdata = testdata, threshold = 0.5)   # This takes some time
 myrf(data = data11, testdata = testdata, 0.5)
 
-dev.off()
+
 pcaLoRe(data11, testdata, pc.n = 3, threshold = 0.5, plot = TRUE, methodname = "KIHO")
 pcaLoRe(data11, testdata, pc.n = 1:10, threshold = 0.5, plot = TRUE, methodname = "KIHO")
 
