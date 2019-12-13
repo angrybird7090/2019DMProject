@@ -37,7 +37,7 @@ gene5  = read.table("gene5.txt")
 testdata = read.table("test5.txt")
 
 data11 = topgene(genedata = gene5, top = 100, balancing = TRUE, balancing.opt = 1, balance.ratio = 0.6, log = TRUE)
-pcaldaqda(data = data11, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200)
+pcaldaqda(data = data11, testdata, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200)
 LoRe(data = data11, testdata = testdata, threshold = 0.5)   # This takes some time
 myrf(data = data11, testdata = testdata, 0.5)
 
@@ -68,3 +68,40 @@ library(dplyr)
 data11 = topgene(genedata = gene5, top = 100, balancing = TRUE, balancing.opt = 2, balance.ratio = 0.6, log = FALSE, plot = FALSE) 
 dat12 = data11 %>% remove_topgene(n = 20) 
 LoRe(dat12, testdata)
+
+
+
+
+
+
+#### ADDED BY HYUNSUK AFTER ADDING partimat2, pcaldaqda for test version, logistic regression using pca
+
+#### ADDED FEATURES(INPUTS)
+# All functions
+#   - methodname  : Method that was used to normalize the data (It is for main name of plots)
+#
+# pcaldaqda
+#   - plot.train  : Will you draw LDA/QDA plots for train data? (Default is FALSE, which implies drawing plots for test data)
+#
+# pcaLoRe
+#   - pc.n        : Number of principle components you want to use for logistic regression
+#                 : If given as vector, this function makes accuracy plot for each pc.n
+
+gene5  = read.table("gene5.txt")
+testdata = read.table("test5.txt")
+
+data11 = topgene(genedata = gene5, top = 100, balancing = TRUE, balancing.opt = 1, balance.ratio = 0.6, log = TRUE, plot = TRUE, methodname = "KIHO")
+# Train plot(as original pcaldaqda)
+pcaldaqda(data = data11, testdata, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200, plot.train = TRUE, methodname = "KIHO")
+# Test plot(updated pcaldaqda)
+pcaldaqda(data = data11, testdata, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200, plot.train = FALSE, methodname = "KIHO")
+LoRe(data = data11, testdata = testdata, threshold = 0.5)   # This takes some time
+myrf(data = data11, testdata = testdata, 0.5)
+
+dev.off()
+pcaLoRe(data11, testdata, pc.n = 3, threshold = 0.5, plot = TRUE, methodname = "KIHO")
+pcaLoRe(data11, testdata, pc.n = 1:10, threshold = 0.5, plot = TRUE, methodname = "KIHO")
+
+
+
+

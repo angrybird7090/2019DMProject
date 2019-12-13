@@ -93,9 +93,9 @@ topgene = function(genedata, top = 100, balancing = FALSE, balancing.opt = 1, ba
   
   #Boxplot of gene expression  (by sample and by gene)
   if(plot){
-    boxplot(genedata[,(1:20)*20], horizontal = TRUE, col = "red", xlab = paste(methodname," normalized count", sep=""), 
+    boxplot(genedata[,(1:20)], horizontal = TRUE, col = "red", xlab = paste(methodname," normalized count", sep=""), 
             main = paste("By sample", "(", methodname, ")", sep = "") )   #by sample
-    boxplot(t(genedata[(1:20)*20,]), horizontal = TRUE, col = "red", xlab = paste(methodname," normalized count", sep=""), 
+    boxplot(t(genedata[(1:20),]), horizontal = TRUE, col = "red", xlab = paste(methodname," normalized count", sep=""), 
             main = paste("By gene", "(", methodname, ")", sep = ""))    #by gene
   }
   
