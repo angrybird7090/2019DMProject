@@ -11,10 +11,11 @@ axes = c(1,2)   # What component (PC) do you want to use for ggbiplot
 ldaqda = c(1,2,3) # 1 for lda, 2 for qda, 3 for NaiveBayes
                   # Multiple arguments such as c(1,2) is possible
 precisionlda = 200 # Parameter for plotting LDA (more precise plotting)
+methodname = "RLE"          # Method of normalization / used in plot main names
 ########################################################################
 ########################################################################
 
-pcaldaqda = function(data, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200){
+pcaldaqda = function(data, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200, methodname = "KIHO"){
   library(ggbiplot)
   library(klaR)
   if(length(axes)!=2){
@@ -22,6 +23,7 @@ pcaldaqda = function(data, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200)
     return()
   }
   
+  top = dim(data)[1]
   name <- colnames(data)
   name_type <- substring(name, 14, 15)
   # y : 0 if cancer 1 if normal
@@ -29,9 +31,10 @@ pcaldaqda = function(data, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200)
   
   pca = princomp(t(data))
   Label = factor(y, labels = c("Cancer", "Normal"))
-  pcbiplot = ggbiplot(pca, choices = c(1,2), var.axes=FALSE) + geom_point(aes(color = Label)) + 
-    ggtitle(paste("Scree plot of PC", axes[1], "and PC", axes[2], collapse = ""))  #looks nice
+  pcbiplot = ggbiplot(pca, choices = axes, var.axes=FALSE) + geom_point(aes(color = Label)) + 
+    ggtitle(paste("Biplot of PC", axes[1], " and PC", axes[2], "(", methodname,", Top", top, " genes)", sep = ""))  #looks nice
   print(pcbiplot)
+  print(screeplot(pca, type="lines", main = paste("Scree plot", "(", methodname,", Top", top, " genes)", sep = "") ))
 
   #Now LDA or QDA 
   s1 = pca$scores[,axes[1]]
@@ -40,14 +43,16 @@ pcaldaqda = function(data, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200)
   colnames(partidata) <- paste("PC", axes[c(2,1)], sep="")
   
   if(1 %in% ldaqda){
-    partimat(as.factor(y) ~ ., data = partidata, method="lda",prec= precisionlda, main = "Partition by LDA")
+    partimat(as.factor(y) ~ ., data = partidata, method="lda",prec= precisionlda, 
+             main = paste("Partition by LDA", "(", methodname,", Top", top, " genes)", sep = "") )
   }
   if(2 %in% ldaqda){
-    partimat(as.factor(y) ~ ., data = partidata, method="qda",prec= precisionlda, main = "Partition by QDA") 
+    partimat(as.factor(y) ~ ., data = partidata, method="qda",prec= precisionlda, 
+             main = paste("Partition by QDA", "(", methodname,", Top", top, " genes)", sep = "")) 
   }
   if(3 %in% ldaqda){
-    partimat(as.factor(y) ~ ., data = partidata, method="naiveBayes",prec= precisionlda, main = "Partition by NaiveBayes") 
+    partimat(as.factor(y) ~ ., data = partidata, method="naiveBayes",prec= precisionlda, 
+             main = paste("Partition by NaiveBayes", "(", methodname,", Top", top, " genes)", sep = "")) 
   }
-  partimat(as.factor(y) ~ ., data = partidata, method="lda",prec= precisionlda, main = "Partition by LDA")$lda
 }
 

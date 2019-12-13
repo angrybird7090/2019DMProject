@@ -13,18 +13,19 @@
 # Option 1 : Robust bootstrap from normal people
 # Option 2 : Use some portion of cancer people only
 ##------------------------------------------------------------------##
-top = 100 # How many genes will you eventually use?
-balancing = FALSE # Balancing number of cancer/normal 
-balancing.opt = 1 # Option for balancing 
+top = 100           # How many genes will you eventually use?
+balancing = FALSE   # Balancing number of cancer/normal 
+balancing.opt = 1   # Option for balancing 
 balance.ratio = 0.7 # Ratio of cancer people to total sample.
-log = TRUE  #Print some messages.
-plot = TRUE #Print plots?
+log = TRUE          # Print some messages.
+plot = TRUE         # Print plots?
+methodname = "RLE"  # Method of normalization / used in plot main names
 ######################################################################
 ######################################################################
 
 
 # Row : gene / Column : People
-topgene = function(genedata, top = 100, balancing = FALSE, balancing.opt = 1, balance.ratio = 0.7, log = TRUE, plot = TRUE){
+topgene = function(genedata, top = 100, balancing = FALSE, balancing.opt = 1, balance.ratio = 0.7, log = TRUE, plot = TRUE, methodname = "KIHO"){
   
   #Printing Function Options
   cat("Selecting ", top, "genes", "from the dataset.\n", collapse="")
@@ -92,8 +93,10 @@ topgene = function(genedata, top = 100, balancing = FALSE, balancing.opt = 1, ba
   
   #Boxplot of gene expression  (by sample and by gene)
   if(plot){
-    boxplot(genedata[,(1:20)*20], horizontal = TRUE, col = "red", xlab = "RLE normalized count", main = "By sample")   #by sample
-    boxplot(t(genedata[(1:20)*20,]), horizontal = TRUE, col = "red", xlab = "RLE normalized count", main = "By gene")    #by gene
+    boxplot(genedata[,(1:20)*20], horizontal = TRUE, col = "red", xlab = "RLE normalized count", 
+            main = paste("By sample", "(", methodname, ")", sep = "") )   #by sample
+    boxplot(t(genedata[(1:20)*20,]), horizontal = TRUE, col = "red", xlab = "RLE normalized count", 
+            main = paste("By gene", "(", methodname, ")", sep = ""))    #by gene
   }
   
   # Index of rows that contain NA (Maybe some error occurred during RLE)
@@ -107,7 +110,7 @@ topgene = function(genedata, top = 100, balancing = FALSE, balancing.opt = 1, ba
   # How many 0s for each gene
   zerofreq = apply(data, 1, function(x) sum(x==0))
   if(plot){
-    plot(density(zerofreq), xlab = "# of people", main = "Frequency of 0 for each gene")
+    plot(density(zerofreq), xlab = "# of people", main = paste("Frequency of 0 for each gene", "(", methodname, ")", sep = "") )
     abline(v = 0.8*n, col = "red", lty = 2) 
     ### Notice that the graph is bimodal, right subgraph starts approx. 0.8*n  (Red Dashed line)
   }
@@ -126,7 +129,7 @@ topgene = function(genedata, top = 100, balancing = FALSE, balancing.opt = 1, ba
   genevar = apply(data2, 1, var)
   #genemad = apply(data2, 1, mad)
   if(plot){
-    plot(density(genevar), xlab = "Variance of genes", main = "Variance of each gene(Density)")
+    plot(density(genevar), xlab = "Variance of genes", main = paste("Variance of each gene(Density)", "(", methodname, ")", sep = "" ) )
     #plot(density(genemad), main = "MAD of each genes")
   }
   

@@ -1,6 +1,7 @@
 
 # INPUTS
 
+  # methodname: Method that was used to normalize the data (It is for main name of plots)
 # topgene
   # genedata  : Normalized gene data
   # top       : How many genes will be selected eventually

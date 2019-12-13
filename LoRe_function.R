@@ -8,11 +8,13 @@
 data = data.frame()     # Data with selected genes by topgene function
 testdata = data.frame() # Data to test. Name of genes should be retained
 threshold = 0.5         # Threshold value to print Confusion Matrix
+plot = TRUE             # Plot ROC curve or not
+methodname = "RLE"      # Method of normalization / used in plot main names
 ########################################################################
 ########################################################################
 
 
-LoRe = function(data, testdata, threshold = 0.5, log = TRUE){
+LoRe = function(data, testdata, threshold = 0.5, plot = TRUE, methodname = "KIHO"){
   library(pROC)
   library(caret)
   name <- colnames(data)
@@ -37,7 +39,9 @@ LoRe = function(data, testdata, threshold = 0.5, log = TRUE){
   roc.test1 <- roc(test.y, as.vector(testX))
   if (log) {
     plot.roc(roc.test1, col="red", print.auc=TRUE, max.auc.polygon=TRUE, print.thres.pch=19, 
-           print.thres.col = "red",  auc.polygon=TRUE, auc.polygon.col="#D1F2EB", main = "ROC curve for testdata")}   # 선 아래 면적에 대한 출력, 색상을 설정합니다. 
+           print.thres.col = "red",  auc.polygon=TRUE, auc.polygon.col="#D1F2EB", 
+           main = paste("LR ROC curve for testdata(", methodname,", Top", top, " genes)", sep ="" ))
+    }   # 선 아래 면적에 대한 출력, 색상을 설정합니다. 
   roc.test.01result = ifelse(testX.prob > threshold, 1, 0)
   if (log){
     print(confusionMatrix(as.factor(roc.test.01result), as.factor(test.y))) }  #confusionMatrix
