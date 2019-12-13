@@ -100,7 +100,7 @@ pcaLoRe = function(data, testdata, pc.n = 3, threshold = 0.5, plot = TRUE, metho
     if (plot) {
       plot.roc(roc.test1, col="red", print.auc=TRUE, max.auc.polygon=TRUE, print.thres.pch=19, 
                print.thres.col = "red",  auc.polygon=TRUE, auc.polygon.col="#D1F2EB", identity = FALSE, 
-               main = paste("LR ROC curve for testdata(", methodname,", Top", top, " genes)", sep ="" ),)
+               main = paste("LR ROC curve for testdata(", methodname,", Top", top, " genes)", sep ="" ))
     }   # 선 아래 면적에 대한 출력, 색상을 설정합니다. 
     roc.test.01result = ifelse(testX.prob > threshold, 1, 0)
     if (log){
@@ -132,7 +132,8 @@ pcaLoRe = function(data, testdata, pc.n = 3, threshold = 0.5, plot = TRUE, metho
     
     plot(pc.n, accuracy, main = paste("Accuracy of pca-LR(", methodname,", Top", top, " genes)", sep ="" ), xlab = "Number of PCs used", ylab = "Accuracy", type = "b")
     
-    
+    names(accuracy) <- pc.n
+    return(accuracy)
   }
   
 }
