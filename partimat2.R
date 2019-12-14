@@ -19,7 +19,7 @@ partimat2 <- function(x, ...)
   UseMethod("partimat2")
 
 
-partimat2.default <- function(x, grouping, testx, testgrouping, method = "lda", prec = 100, 
+partimat2.default <- function(x, grouping, testx, testgrouping, stats = FALSE, method = "lda", prec = 100, 
                               nplots.vert, nplots.hor, main = "Partition Plot", name, mar,
                               plot.matrix = FALSE, plot.control = list(), ...){
   
@@ -54,7 +54,7 @@ partimat2.default <- function(x, grouping, testx, testgrouping, method = "lda", 
   on.exit(par(opar))
   
   sapply(1:ncomb, function(k) 
-    drawparti2(grouping = grouping, testx = testx, testgrouping = testgrouping, x = vars[(1:nobs), k], 
+    drawparti2(grouping = grouping, testx = testx, testgrouping = testgrouping, stats = stats, x = vars[(1:nobs), k], 
                y = vars[(nobs+1):(2*nobs), k], method = method, 
                xlab = varname[1,k], ylab = varname[2,k], prec = prec, 
                legend.err = plot.matrix, plot.control = plot.control, ...)
@@ -100,7 +100,7 @@ partimat2.formula <- function(formula, data = NULL, ..., subset, na.action = na.
   invisible()
 }
 
-drawparti2 <- function(grouping, testx, testgrouping, x, y, method = "lda", prec = 100, 
+drawparti2 <- function(grouping, testx, testgrouping, x, y, stats = FALSE, method = "lda", prec = 100, 
                        xlab=NULL, ylab=NULL, col.correct = "black", col.wrong = "red", 
                        col.mean = "black", col.contour = "darkgrey", gs = as.character(grouping), testgs = as.character(testgrouping),
                        pch.mean = 19, cex.mean = 1.3, print.err = 0.7, legend.err = FALSE,
@@ -150,6 +150,13 @@ drawparti2 <- function(grouping, testx, testgrouping, x, y, method = "lda", prec
   c10 = sum(testgrouping==1 & khead == 0)
   c11 = sum(testgrouping==1 & khead == 1)
   balance.err <- round(0.5*((c00/(c00+c01)) + (c11/(c10+c11))),3)
+
+  #### If you want stats CURVE
+  if(stats){
+    library(caret)
+    print(confusionMatrix(khead, testgrouping)$table)
+    print(confusionMatrix(khead, testgrouping)$byClass)
+  }
   
   color <- ifelse(colorw, col.wrong, col.correct)
   if(is.character(testgs) || is.factor(testgs)) testgs <- substr(testgs, 1, 1)

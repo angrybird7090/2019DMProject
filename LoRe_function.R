@@ -66,6 +66,7 @@ pc.n = 1:10       # Also prints accuracy graph for pc.n from 1 to 10
 
 
 pcaLoRe = function(data, testdata, pc.n = 3, threshold = 0.5, plot = TRUE, methodname = "KIHO"){
+  library(caret)
   top = dim(data)[1]
   name <- colnames(data)
   name_type <- substring(name, 14, 15)

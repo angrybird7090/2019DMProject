@@ -32,8 +32,8 @@ data.array = c()  # Write names of dataframes!!  ex> c("countdata", "fpkmdata", 
 
 
 topgene.plots.save = function(data.array, filename.prefix = "PREFIX", top = 100, balancing = TRUE, balancing.opt = 1, balance.ratio = 0.5, log = FALSE, 
-                           normalize.methods = c("Not", "RLE", "TPM", "FPKM"), plotname.methods = c("Count","RLE", "TPM", "FPKM")){
- 
+                              normalize.methods = c("Not", "RLE", "TPM", "FPKM"), plotname.methods = c("Count","RLE", "TPM", "FPKM")){
+  
   for( i in 1:length(normalize.methods) ){
     
     cat("\nPlotting data \t\t:", data.array[i],"\n")

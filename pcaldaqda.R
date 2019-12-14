@@ -41,7 +41,7 @@ pcaonly = function(data, axes = c(1,2), methodname = "KIHO"){
 }
 
 
-pcaldaqda = function(data, testdata, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200, plot.train = FALSE, methodname = "KIHO"){
+pcaldaqda = function(data, testdata, stats = FALSE, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200, plot.train = FALSE, methodname = "KIHO"){
 
   library(klaR)
   
@@ -51,7 +51,7 @@ pcaldaqda = function(data, testdata, axes = c(1,2), ldaqda = c(1,2,3), precision
   # y : 0 if cancer 1 if normal
   y = ifelse(name_type =="01", 0, 1)
   
-  pca = pcaonly(data, axes = c(1,2), methodname = "KIHO")
+  pca = pcaonly(data, axes = c(1,2), methodname = methodname)
     
   #Now LDA or QDA 
   s1 = pca$scores[,axes[1]]
@@ -91,15 +91,15 @@ pcaldaqda = function(data, testdata, axes = c(1,2), ldaqda = c(1,2,3), precision
     ###############################################################
     
     if(1 %in% ldaqda){
-      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), data = partidata, method="lda",prec= precisionlda, 
+      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="lda",prec= precisionlda, 
                 main = paste("Partition by LDA", "(", methodname,", Top", top, " genes)", sep = ""))
     }
     if(2 %in% ldaqda){
-      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), data = partidata, method="qda",prec= precisionlda, 
+      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="qda",prec= precisionlda, 
                main = paste("Partition by QDA", "(", methodname,", Top", top, " genes)", sep = "")) 
     }
     if(3 %in% ldaqda){
-      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), data = partidata, method="naiveBayes",prec= precisionlda, 
+      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="naiveBayes",prec= precisionlda, 
                main = paste("Partition by NaiveBayes", "(", methodname,", Top", top, " genes)", sep = "")) 
     }
     
