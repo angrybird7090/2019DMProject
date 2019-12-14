@@ -53,8 +53,7 @@ partimat2.default <- function(x, grouping, testx, testgrouping, stats = FALSE, m
               oma = c(0, 0, !is.null(main), 0))
   on.exit(par(opar))
   
-  sapply(1:ncomb, function(k) 
-    drawparti2(grouping = grouping, testx = testx, testgrouping = testgrouping, stats = stats, x = vars[(1:nobs), k], 
+  balance.err = sapply(1:ncomb, function(k) drawparti2(grouping = grouping, testx = testx, testgrouping = testgrouping, stats = stats, x = vars[(1:nobs), k], 
                y = vars[(nobs+1):(2*nobs), k], method = method, 
                xlab = varname[1,k], ylab = varname[2,k], prec = prec, 
                legend.err = plot.matrix, plot.control = plot.control, ...)
@@ -63,6 +62,7 @@ partimat2.default <- function(x, grouping, testx, testgrouping, stats = FALSE, m
   title(main = main, outer = TRUE)
   
   invisible()
+  return(balance.err)
 }
 
 partimat2.formula <- function(formula, data = NULL, ..., subset, na.action = na.fail) 
@@ -87,6 +87,7 @@ partimat2.formula <- function(formula, data = NULL, ..., subset, na.action = na.
   if (xint > 0) 
     x <- x[, -xint, drop = FALSE]
   res <- partimat2.default(x, grouping, ...)
+  return(res)
   res$terms <- Terms
   cl <- match.call()
   cl[[1]] <- as.name("partimat")
@@ -149,7 +150,7 @@ drawparti2 <- function(grouping, testx, testgrouping, x, y, stats = FALSE, metho
   c01 = sum(testgrouping==0 & khead == 1)
   c10 = sum(testgrouping==1 & khead == 0)
   c11 = sum(testgrouping==1 & khead == 1)
-  balance.err <- round(0.5*((c00/(c00+c01)) + (c11/(c10+c11))),3)
+  balance.accu <- round(0.5*((c00/(c00+c01)) + (c11/(c10+c11))),3)
 
   #### If you want stats CURVE
   if(stats){
@@ -184,7 +185,7 @@ drawparti2 <- function(grouping, testx, testgrouping, x, y, stats = FALSE, metho
       legend(par("usr")[1], par("usr")[4], 
              legend = paste("Error:", err), bg = legend.bg, cex = print.err)
     else
-      mtext(paste("app. balanced error rate:", 1-balance.err), 3, cex = print.err)    # use "app. error rate:", err instead of balance.err for Accuracy
+      mtext(paste("app. balanced error rate:", 1-balance.accu), 3, cex = print.err)    # use "app. error rate:", err instead of balance.err for Accuracy
   }
-  
+  return(1-balance.accu)
 }

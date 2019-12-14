@@ -43,25 +43,45 @@ myrf(data = data11, testdata = testdata, 0.5)
 
 ### With Cross Validation
 
-estimated_test_error = cv(gene5, 5)
+estimated_test_error = cv(gene5, 5, top = 20, balancing.opt = 2, methodname = "Hyunsuk")
 
-cv <- function(data, k){
+cv <- function(data, k, top = 100, balancing = TRUE, balancing.opt = 1, balance.ratio = 0.6, methodname = "KIHO"){
+  
   n = ncol(data)
-  cv_lab = sample(n, n, replace = F) %% k
+  name <- colnames(data)
+  name_type <- substring(name, 14, 15)    
+  normal.index = (1:n)[name_type == "11"]   
+  cancer.index = (1:n)[name_type == "01"]
+  normal.n = length(normal.index)          #number of normal people
+  cancer.n = length(cancer.index)          #number of cancer people
+  
+  #cv_lab = sample(n, n, replace = F) %% k
+  cv_lab_normal = sample(normal.n, normal.n, replace = F) %% k
+  cv_lab_cancer = sample(cancer.n, cancer.n, replace = F) %% k
+  
   # order : logistic regression, lda, qda, naive bayes, random forest
   cv_error = rep(0, 5)
   for (i_cv in 1:k){
-    w_val = which(cv_lab == (i_cv-1))
+    #w_val = which(cv_lab == (i_cv-1))
+    w_val = c(normal.index[cv_lab_normal == (i_cv-1)], cancer.index[cv_lab_normal == (i_cv-1)])
+
     tr = data[,-w_val]
     val = data[,w_val]
-    tr2 = topgene(genedata = tr, top = 100, balancing = TRUE, balancing.opt = 1, balance.ratio = 0.6, log = FALSE, plot = FALSE)
-    cv_error[1] = cv_error[1] + (1-LoRe(data = tr2, testdata = val, threshold = 0.5, log = FALSE))
-    # cv_error[2] = cv_error[2]
-    # cv_error[3] = cv_error[3]
-    # cv_error[4] = cv_error[4]
-    cv_error[5] = cv_error[5] + (1-myrf(data = tr2, testdata = val, threshold = 0.5, log = FALSE))
+    tr2 = topgene(genedata = tr, top = top, balancing = balancing, balancing.opt = balancing.opt, balance.ratio = balance.ratio, 
+                  log = FALSE, plot = FALSE,  methodname = methodname)
+    
+    cv_error[1] = cv_error[1] + (1-LoRe(data = tr2, testdata = val, threshold = 0.5, log = FALSE, methodname = methodname))
+    
+    ldaqda_err_vec = pcaldaqda(data = tr2, val, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200, plot.train = FALSE,  methodname = methodname)
+    cv_error[2] = cv_error[2] + ldaqda_err_vec[1]
+    cv_error[3] = cv_error[3] + ldaqda_err_vec[2]
+    cv_error[4] = cv_error[4] + ldaqda_err_vec[3]
+    
+    cv_error[5] = cv_error[5] + (1-myrf(data = tr2, testdata = val, threshold = 0.5, log = FALSE,  methodname = methodname))
   }
   cv_error = cv_error/k
+  
+  print(cv_error)
 }
 
 #Also combining with MYRF, remove_topgene

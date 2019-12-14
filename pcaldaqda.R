@@ -44,7 +44,7 @@ pcaonly = function(data, axes = c(1,2), methodname = "KIHO"){
 pcaldaqda = function(data, testdata, stats = FALSE, axes = c(1,2), ldaqda = c(1,2,3), precisionlda = 200, plot.train = FALSE, methodname = "KIHO"){
 
   library(klaR)
-  
+  balance.err = c()
   top = dim(data)[1]
   name <- colnames(data)
   name_type <- substring(name, 14, 15)
@@ -91,19 +91,23 @@ pcaldaqda = function(data, testdata, stats = FALSE, axes = c(1,2), ldaqda = c(1,
     ###############################################################
     
     if(1 %in% ldaqda){
-      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="lda",prec= precisionlda, 
+      b = partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="lda",prec= precisionlda, 
                 main = paste("Partition by LDA", "(", methodname,", Top", top, " genes)", sep = ""))
+      balance.err = c(balance.err, b)
     }
     if(2 %in% ldaqda){
-      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="qda",prec= precisionlda, 
+      b = partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="qda",prec= precisionlda, 
                main = paste("Partition by QDA", "(", methodname,", Top", top, " genes)", sep = "")) 
+      balance.err = c(balance.err, b)
     }
     if(3 %in% ldaqda){
-      partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="naiveBayes",prec= precisionlda, 
+      b = partimat2(as.factor(y) ~ ., testx = partitestdata, testgrouping = as.factor(test.y), stats = stats, data = partidata, method="naiveBayes",prec= precisionlda, 
                main = paste("Partition by NaiveBayes", "(", methodname,", Top", top, " genes)", sep = "")) 
+      balance.err = c(balance.err, b)
     }
     
   }
+  return(balance.err)
 }
 
 
