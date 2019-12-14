@@ -8,7 +8,7 @@
 #         methodname: Method of normalization / used in plot main names
 # Output : ROC curve for predicted result on test data / Confusion Matrix with certain threshold (default 0.5)
 
-myrf = function(data, testdata, threshold = 0.5, plot = TRUE, methodname = "KIHO"){
+myrf = function(data, testdata, threshold = 0.5, log = TRUE, plot = TRUE, methodname = "KIHO"){
   library(pROC)
   library(caret)
   library(randomForest)

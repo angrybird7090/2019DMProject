@@ -44,6 +44,7 @@ myrf(data = data11, testdata = testdata, 0.5)
 ### With Cross Validation
 
 estimated_test_error = cv(gene5, 5)
+
 cv <- function(data, k){
   n = ncol(data)
   cv_lab = sample(n, n, replace = F) %% k
