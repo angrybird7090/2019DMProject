@@ -20,8 +20,8 @@ partimat2 <- function(x, ...)
 
 
 partimat2.default <- function(x, grouping, testx, testgrouping, method = "lda", prec = 100, 
-                             nplots.vert, nplots.hor, main = "Partition Plot", name, mar,
-                             plot.matrix = FALSE, plot.control = list(), ...){
+                              nplots.vert, nplots.hor, main = "Partition Plot", name, mar,
+                              plot.matrix = FALSE, plot.control = list(), ...){
   
   nvar <- ncol(x)
   if(nvar < 2) stop("at least 2 variables required")
@@ -29,7 +29,7 @@ partimat2.default <- function(x, grouping, testx, testgrouping, method = "lda", 
   nobs <- nrow(x)
   if(missing(name)) name <- colnames(x)
   # plot in scatterplot matrix
-
+  
   ncomb <- round(0.5 * nvar * (nvar-1))
   if (missing(nplots.hor) && missing(nplots.vert)){
     nplots.hor<-ceiling(sqrt(ncomb))
@@ -55,13 +55,13 @@ partimat2.default <- function(x, grouping, testx, testgrouping, method = "lda", 
   
   sapply(1:ncomb, function(k) 
     drawparti2(grouping = grouping, testx = testx, testgrouping = testgrouping, x = vars[(1:nobs), k], 
-              y = vars[(nobs+1):(2*nobs), k], method = method, 
-              xlab = varname[1,k], ylab = varname[2,k], prec = prec, 
-              legend.err = plot.matrix, plot.control = plot.control, ...)
+               y = vars[(nobs+1):(2*nobs), k], method = method, 
+               xlab = varname[1,k], ylab = varname[2,k], prec = prec, 
+               legend.err = plot.matrix, plot.control = plot.control, ...)
   )
   par(mfrow=c(1,1))
   title(main = main, outer = TRUE)
-
+  
   invisible()
 }
 
@@ -101,11 +101,11 @@ partimat2.formula <- function(formula, data = NULL, ..., subset, na.action = na.
 }
 
 drawparti2 <- function(grouping, testx, testgrouping, x, y, method = "lda", prec = 100, 
-                      xlab=NULL, ylab=NULL, col.correct = "black", col.wrong = "red", 
-                      col.mean = "black", col.contour = "darkgrey", gs = as.character(grouping), testgs = as.character(testgrouping),
-                      pch.mean = 19, cex.mean = 1.3, print.err = 0.7, legend.err = FALSE,
-                      legend.bg = "white", imageplot = TRUE, image.colors = cm.colors(nc), 
-                      plot.control = list(), ...){                       
+                       xlab=NULL, ylab=NULL, col.correct = "black", col.wrong = "red", 
+                       col.mean = "black", col.contour = "darkgrey", gs = as.character(grouping), testgs = as.character(testgrouping),
+                       pch.mean = 19, cex.mean = 1.3, print.err = 0.7, legend.err = FALSE,
+                       legend.bg = "white", imageplot = TRUE, image.colors = cm.colors(nc), 
+                       plot.control = list(), ...){                       
   #grouping: class vec.
   #x: first data vec.
   #y: second data vec.
