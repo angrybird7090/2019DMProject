@@ -154,8 +154,10 @@ drawparti2 <- function(grouping, testx, testgrouping, x, y, stats = FALSE, metho
   #### If you want stats CURVE
   if(stats){
     library(caret)
+    cat("Stats for", method, "\n\n")
     print(confusionMatrix(khead, testgrouping)$table)
     print(confusionMatrix(khead, testgrouping)$byClass)
+    cat(paste(rep("-",150), collapse =""),"\n")
   }
   
   color <- ifelse(colorw, col.wrong, col.correct)

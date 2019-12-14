@@ -14,7 +14,7 @@ methodname = "RLE"      # Method of normalization / used in plot main names
 ########################################################################
 
 
-LoRe = function(data, testdata, threshold = 0.5, plot = TRUE, methodname = "KIHO"){
+LoRe = function(data, testdata, threshold = 0.5, log = TRUE, plot = TRUE, methodname = "KIHO"){
   library(pROC)
   library(caret)
   name <- colnames(data)
@@ -65,7 +65,7 @@ pc.n = 1:10       # Also prints accuracy graph for pc.n from 1 to 10
 ########################################################################
 
 
-pcaLoRe = function(data, testdata, pc.n = 3, threshold = 0.5, plot = TRUE, methodname = "KIHO"){
+pcaLoRe = function(data, testdata, pc.n = 3, threshold = 0.5, log = TRUE, plot = TRUE, methodname = "KIHO"){
   library(caret)
   top = dim(data)[1]
   name <- colnames(data)

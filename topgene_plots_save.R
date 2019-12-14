@@ -18,7 +18,7 @@ filename.prefix = "PREFIX"        # Your choice for prefix of filename of saving
 
 ### Example Code ###
 
-topgene.plots.save(data.array = c("countdata", "rledata", "tpmdata", "fpkmdata"), filename.prefix = "WHATPREFIX")
+topgene.plots.save(data.list = list(countdata, rledata, tpmdata, fpkmdata), filename.prefix = "WHATPREFIX")
 
 
 
@@ -28,10 +28,10 @@ topgene.plots.save(data.array = c("countdata", "rledata", "tpmdata", "fpkmdata")
 
 normalize.methods = c("Not", "RLE", "TPM", "FPKM")
 plotname.methods = c("Count","RLE", "TPM", "FPKM")
-data.array = c()  # Write names of dataframes!!  ex> c("countdata", "fpkmdata", ...)
+data.list = list()  # List of dataframes!!  ex> list(countdata, rledata, tpmdata, fpkmdata)
 
 
-topgene.plots.save = function(data.array, filename.prefix = "PREFIX", top = 100, balancing = TRUE, balancing.opt = 1, balance.ratio = 0.5, log = FALSE, 
+topgene.plots.save = function(data.list, filename.prefix = "PREFIX", top = 100, balancing = TRUE, balancing.opt = 1, balance.ratio = 0.5, log = FALSE, 
                               normalize.methods = c("Not", "RLE", "TPM", "FPKM"), plotname.methods = c("Count","RLE", "TPM", "FPKM")){
   
   for( i in 1:length(normalize.methods) ){
@@ -41,7 +41,7 @@ topgene.plots.save = function(data.array, filename.prefix = "PREFIX", top = 100,
     
     png(paste(filename.prefix, "_", plotname.methods[i], ".png", sep = ""), width = 800, height = 600)
     par(mfrow=c(2,2))
-    data.count <- topgene(genedata = get(data.array[i]), top = top, balancing = balancing, 
+    data.count <- topgene(genedata = data.list[[i]], top = top, balancing = balancing, 
                           balancing.opt = balancing.opt, balance.ratio = balance.ratio, log = log, plot = TRUE, methodname = normalize.methods[i])
     cat("-----------------------------------------------------------------------\n")
     dev.off()
